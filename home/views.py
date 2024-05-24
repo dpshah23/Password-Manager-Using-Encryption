@@ -3,8 +3,15 @@ from passwor_manager.firebase import *
 from django.contrib import messages
 from dotenv import load_dotenv
 import os
+from cryptography.fernet import Fernet
+import os
+import base64
 
 load_dotenv()
+
+def key():
+    
+    return Fernet.generate_key()
 
 def login(request):
     if request.method=="POST":
@@ -82,16 +89,40 @@ def addnewpassword(request):
         name=request.POST.get('name')
         emailused=request.POST.get('email')
         password=request.POST.get('password')
+
+        print(name,emailused,password)
+
+        key1=key()
+        f=Fernet(key1)
+        encrypt=f.encrypt(password.encode())
+        encrypted_password = base64.b64encode(encrypt).decode('utf-8')
+        key_str = base64.b64encode(key1).decode('utf-8')
+
         data={
             'email':request.session['email'], 
             'name':name,
             'emailused':emailused,
-            'password':password
+            'password':encrypted_password,
+            'key':key_str
         }
+
         db.child('passwords').push(data)
+        
         messages.success(request,"Password Added Successfully")
         return redirect('/')
     return render(request,'addnewpassword.html')
+
+
+def decrypt_password(password,key):
+    decoded_key = base64.b64decode(key)
+    decoded_password = base64.b64decode(password)
+
+    f = Fernet(decoded_key)
+   
+    decrypted_password = f.decrypt(decoded_password)
+    
+    return decrypted_password.decode()
+
 
 def logout(request):
 
