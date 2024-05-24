@@ -97,3 +97,6 @@ def logout(request):
 
     request.session.flush()
     return redirect('/login')
+
+def error_404(request,exception):
+    return render(request,'404.html')
