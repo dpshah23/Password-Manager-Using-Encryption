@@ -46,8 +46,16 @@ def home(request):
     if 'email' not in request.session:
         return redirect('/login')
     else:
+        email=request.session['email']
+        totpass=db.child('passwords').get().val()
+        getpasswords=[]
+        for pass_id, pass_data in totpass.items():
+            if pass_data['email']==email:  
+                password=decrypt_password(pass_data['password'],pass_data['key'])
+                getpasswords.append({'name':pass_data['name'],'emailused':pass_data['emailused'],'password':password})        
+        return render(request,'home.html',{'passwords':getpasswords})
         
-        return render(request,'home.html')
+    return render(request,'home.html')
 
 def signup(request):
 
