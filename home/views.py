@@ -18,8 +18,11 @@ def login(request):
             # print(authemail,authpassword)
             user=auth.sign_in_with_email_and_password(authemail,authpassword)
             authuser=auth.sign_in_with_email_and_password(email,password)
-            getname=db.child('users').child(email).get(user['idToken']).val()
-            name=getname['name']
+            getname=db.child('users').get().val()
+            for user_id, user_data in getname.items():
+                if user_data['email']==email:
+                    name=user_data['name']
+                    break
             request.session['name']=name
             request.session['email']=email
             request.session['logged_in']=True
@@ -62,7 +65,7 @@ def signup(request):
                 'password':password
 
             }
-            db.child('users').child(email).set(data,user['idToken'])
+            db.child('users').push(data)
             messages.success(request,f"Account Created Successfully")
             return redirect("/login")
         except Exception as e:
@@ -71,3 +74,26 @@ def signup(request):
             return render(request,'signup.html')
     return render(request,'signup.html')
 # Create your views here.
+
+def addnewpassword(request):
+    if 'email' not in request.session:
+        return redirect('/login')
+    if request.method=="POST":
+        name=request.POST.get('name')
+        emailused=request.POST.get('email')
+        password=request.POST.get('password')
+        data={
+            'email':request.session['email'], 
+            'name':name,
+            'emailused':emailused,
+            'password':password
+        }
+        db.child('passwords').push(data)
+        messages.success(request,"Password Added Successfully")
+        return redirect('/')
+    return render(request,'addnewpassword.html')
+
+def logout(request):
+
+    request.session.flush()
+    return redirect('/login')

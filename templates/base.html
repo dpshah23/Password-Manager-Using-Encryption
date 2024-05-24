@@ -22,7 +22,7 @@
                 <a class="nav-link active" aria-current="page" href="#">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Add New Password</a>
+                <a class="nav-link active" aria-current="page" href="/add_new_password">Add New Password</a>
               </li>
               {% endif %}
               
@@ -34,7 +34,8 @@
               <a href="/signup" class="btn btn-outline-success" >SignUp</a>
 
               {% else %}
-                <h4>Welcome, {{ request.session.user }}</h4>
+                <h4>Welcome, {{ request.session.name }}</h4>
+                &nbsp;&nbsp;
                 <a href="/logout" class="btn btn-outline-success">Logout</a>
                 {% endif %}
             
