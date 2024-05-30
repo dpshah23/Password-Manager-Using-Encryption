@@ -32,8 +32,8 @@ A secure password manager built with Django, integrated with Firebase for databa
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/django-password-manager.git
-    cd django-password-manager
+    git clone https://github.com/dpshah23/password-manager.git
+    cd password-manager
     ```
 
 2. Create and activate a virtual environment:
