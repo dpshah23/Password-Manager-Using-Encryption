@@ -1,7 +1,11 @@
 # vercel_handler.py
 
 import os
+import sys
 from django.core.wsgi import get_wsgi_application
+
+# Add the project directory to the sys.path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Set the Django settings module based on environment variable
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'passwor_manager.settings')
